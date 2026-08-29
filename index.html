@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Production Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e293b">
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #f1f5f9; margin: 0; padding: 16px; color: #1e293b; }
+    .card { background: #ffffff; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    h2, h3 { margin-top: 0; }
+    textarea { width: 100%; height: 120px; border-radius: 8px; border: 1px solid #cbd5e1; padding: 10px; font-size: 14px; }
+    button { background: #0f172a; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 8px; }
+    button:active { opacity: 0.8; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
+    th, td { padding: 8px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background: #f8fafc; font-weight: 600; }
+    .badge { font-weight: 700; font-size: 16px; color: #0f172a; }
+    .grand-total { background: #e0f2fe; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Daily Production Parser</h2>
+    <textarea id="rawInput" placeholder="Paste WhatsApp message here..."></textarea>
+    <button onclick="processInput()">Parse & Calculate</button>
+  </div>
+
+  <div id="outputCard" class="card" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3>Report Summary</h3>
+      <span id="reportDate" class="badge"></span>
+    </div>
+    
+    <table id="resultTable">
+      <thead>
+        <tr>
+          <th>Machine / Line</th>
+          <th>Day (mtr)</th>
+          <th>Night (mtr)</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+      <tfoot>
+        <tr class="grand-total">
+          <td colspan="3">Grand Total</td>
+          <td id="grandTotalCell"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
