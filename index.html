@@ -3,56 +3,114 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Production Tracker</title>
+  <title>Production Analytics</title>
+  <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1e293b">
-  <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: #f1f5f9; margin: 0; padding: 16px; color: #1e293b; }
-    .card { background: #ffffff; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    h2, h3 { margin-top: 0; }
-    textarea { width: 100%; height: 120px; border-radius: 8px; border: 1px solid #cbd5e1; padding: 10px; font-size: 14px; }
-    button { background: #0f172a; color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 8px; }
-    button:active { opacity: 0.8; }
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; }
-    th, td { padding: 8px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-    th { background: #f8fafc; font-weight: 600; }
-    .badge { font-weight: 700; font-size: 16px; color: #0f172a; }
-    .grand-total { background: #e0f2fe; font-weight: bold; }
-  </style>
+  <link rel="apple-touch-icon" href="https://via.placeholder.com/192.png?text=Prod+App">
 </head>
 <body>
 
-  <div class="card">
-    <h2>Daily Production Parser</h2>
-    <textarea id="rawInput" placeholder="Paste WhatsApp message here..."></textarea>
-    <button onclick="processInput()">Parse & Calculate</button>
-  </div>
-
-  <div id="outputCard" class="card" style="display: none;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Report Summary</h3>
-      <span id="reportDate" class="badge"></span>
+  <header>
+    <div class="header-container">
+      <div>
+        <h1>Jayshree Digital</h1>
+        <p class="subtitle">Production Tracking & Analytics</p>
+      </div>
+      <button class="btn-refresh" onclick="fetchProductionData()" title="Reload Data">↻ Refresh</button>
     </div>
-    
-    <table id="resultTable">
-      <thead>
-        <tr>
-          <th>Machine / Line</th>
-          <th>Day (mtr)</th>
-          <th>Night (mtr)</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-      <tfoot>
-        <tr class="grand-total">
-          <td colspan="3">Grand Total</td>
-          <td id="grandTotalCell"></td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
+  </header>
+
+  <main>
+    <!-- Filter Section -->
+    <section class="controls-card">
+      <div class="form-group">
+        <label for="monthFilter">Select Month:</label>
+        <select id="monthFilter" onchange="filterData()">
+          <option value="ALL">All Recorded Data</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- KPI Summary Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Total Output</div>
+        <div class="kpi-value" id="kpiTotal">0 mtr</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Day Shift</div>
+        <div class="kpi-value day-val" id="kpiDay">0 mtr</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Night Shift</div>
+        <div class="kpi-value night-val" id="kpiNight">0 mtr</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Top Machine</div>
+        <div class="kpi-value" id="kpiTopMachine" style="font-size: 16px; margin-top: 4px;">-</div>
+      </div>
+    </section>
+
+    <!-- Machine Performance Rollup -->
+    <section class="card">
+      <div class="card-header">
+        <h2>Machine Rollup Summary</h2>
+      </div>
+      <div class="table-container">
+        <table id="machineTable">
+          <thead>
+            <tr>
+              <th>Machine</th>
+              <th>Day (mtr)</th>
+              <th>Night (mtr)</th>
+              <th>Total (mtr)</th>
+              <th>Share</th>
+            </tr>
+          </thead>
+          <tbody id="machineTableBody">
+            <tr><td colspan="5" class="text-center">Loading production data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- WhatsApp Historical Backfill Command -->
+    <section class="card">
+      <div class="card-header">
+        <h2>WhatsApp History Backfill</h2>
+      </div>
+      <p class="section-desc">Trigger your PC listener to fetch past reports from WhatsApp:</p>
+      <div class="backfill-form">
+        <input type="date" id="backfillDate" value="2026-07-01">
+        <button class="btn-primary" onclick="requestBackfill()">Queue Backfill</button>
+      </div>
+      <div id="backfillMsg" class="status-msg"></div>
+    </section>
+
+    <!-- Daily Log Explorer -->
+    <section class="card">
+      <div class="card-header">
+        <h2>Daily Shift Logs</h2>
+      </div>
+      <div class="table-container">
+        <table id="dailyTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Machine</th>
+              <th>Day</th>
+              <th>Night</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="dailyTableBody">
+            <tr><td colspan="5" class="text-center">Loading logs...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
 
   <script src="app.js"></script>
 </body>
