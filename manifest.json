@@ -1,26 +1,20 @@
-const CACHE_NAME = 'prod-pwa-v1';
-const ASSETS = [
-  './',
-  './index.html',
-  './style.css',
-  './app.js',
-  './manifest.json'
-];
-
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
-  );
-});
-
-self.addEventListener('fetch', e => {
-  // Let Google Apps Script API calls bypass Service Worker cache
-  if (e.request.url.includes('script.google.com')) {
-    e.respondWith(fetch(e.request));
-    return;
-  }
-
-  e.respondWith(
-    caches.match(e.request).then(response => response || fetch(e.request))
-  );
-});
+{
+  "name": "Jayshree Digital Production",
+  "short_name": "Production",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192.png?text=JD+Prod",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512.png?text=JD+Prod",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
